@@ -8,11 +8,12 @@
   <!-- Chart.js pour statistiques avancées -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Feuille de style -->
+  <!-- Feuille de style (veille à ce que css/style.css existe) -->
   <link rel="stylesheet" href="css/style.css" />
-
 </head>
-<body>
+
+<!-- ✔️ IMPORTANT : set default profile to CM2 to match expected UI -->
+<body data-profile="CM2">
   <div class="app-container">
     <!-- ========== HEADER ========== -->
     <header class="header">
@@ -21,37 +22,38 @@
           <img src="assets/images/logofTDSR.png" alt="Logo DSR" />
         </div>
         <div style="display: flex; gap: 8px;">
-          <button id="settingsButtonMobile" class="btn-settings">
+          <button id="settingsButtonMobile" class="btn-settings" aria-label="Paramètres">
             <span class="gear-icon">⚙️</span>
           </button>
-          <button id="themeToggle" class="btn-theme">
+          <button id="themeToggle" class="btn-theme" aria-label="Thème">
             <span class="theme-icon">🌙</span>
           </button>
         </div>
       </div>
 
-      <div class="header-logo" style="display: none;">
+      <!-- Desktop logo (visible en desktop via CSS) -->
+      <div class="header-logo header-desktop-logo">
         <img src="assets/images/logofTDSR.png" alt="Logo DSR" />
       </div>
       
       <h1 class="app-title">TablesMathAssist</h1>
       
-      <div style="display: none; gap: 10px;">
-        <button id="settingsButtonDesktop" class="btn-settings">
+      <div class="header-controls" style="display: none; gap: 10px;">
+        <button id="settingsButtonDesktop" class="btn-settings" aria-label="Paramètres (bureau)">
           <span class="gear-icon">⚙️</span>
         </button>
-        <button id="themeToggleDesktop" class="btn-theme">
+        <button id="themeToggleDesktop" class="btn-theme" aria-label="Thème (bureau)">
           <span class="theme-icon">🌙</span>
         </button>
       </div>
     </header>
 
     <!-- ========== MODAL PARAMÈTRES ========== -->
-    <div id="settingsModal" class="settings-modal-overlay">
-      <div class="settings-modal-content">
+    <div id="settingsModal" class="settings-modal-overlay" aria-hidden="true">
+      <div class="settings-modal-content" role="dialog" aria-modal="true">
         <div class="settings-modal-header">
           <h2>⚙️ Paramètres</h2>
-          <button class="settings-modal-close" id="closeSettingsModal">&times;</button>
+          <button class="settings-modal-close" id="closeSettingsModal" aria-label="Fermer">&times;</button>
         </div>
 
         <div class="settings-section">
@@ -64,7 +66,6 @@
                 <div class="profile-description">Tables 2, 3, 4, 5 prioritaires • Autres jusqu'à 10 • Interface colorée et ludique • Animations bouncy</div>
               </div>
             </label>
-            
             <label class="profile-option">
               <input type="radio" name="userProfile" value="CM2" checked>
               <div class="profile-info">
@@ -72,7 +73,6 @@
                 <div class="profile-description">Toutes les tables • Interface moderne • Animations scale</div>
               </div>
             </label>
-            
             <label class="profile-option">
               <input type="radio" name="userProfile" value="6EME">
               <div class="profile-info">
@@ -80,7 +80,6 @@
                 <div class="profile-description">Révisions collège • Interface élégante • Animations glow</div>
               </div>
             </label>
-            
             <label class="profile-option">
               <input type="radio" name="userProfile" value="5EME">
               <div class="profile-info">
@@ -88,7 +87,6 @@
                 <div class="profile-description">Perfectionnement • Design épuré • Animations subtiles</div>
               </div>
             </label>
-            
             <label class="profile-option">
               <input type="radio" name="userProfile" value="ADULTE">
               <div class="profile-info">
@@ -127,18 +125,38 @@
     <!-- ========== PAGE ACCUEIL ========== -->
     <div id="homePage">
       <div class="welcome-message card">
-        <p>L'application dédiée aux élèves de CM1 à la 5ème pour un entraînement aux tables de multiplication.</p>
-        <div style="margin-top:16px;">
-          <button id="learnBtn" class="btn-primary">Commencer à apprendre</button>
-          <button id="startGame" class="btn-primary">Commencer le Test</button>
+        <p>L'application dédiée aux élèves de CM1 à la 5ème pour un apprentissage parfait des tables de multiplications de 1 à 12.</p>
+      </div>
+
+      <section class="learn-panel card">
+        <h2>Apprends tes tables ici</h2>
+        <div class="welcome-section">
+          <p>📚 Découvre les astuces et secrets de chaque table de multiplication !</p>
+          <button id="learnBtn" class="btn-primary" style="background: #8e24aa;">Commencer à apprendre</button>
+        </div>
+      </section>
+
+      <!-- ========== STATISTIQUES AVANCÉES MODE ADULTE (masquées si data-profile != ADULTE) ========== -->
+      <div class="stats-dashboard">
+        <div class="stats-card">
+          <h3>📊 Performances générales</h3>
+          <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+          </div>
+        </div>
+        <div class="stats-card">
+          <h3>📈 Évolution temporelle</h3>
+          <div class="chart-container">
+            <canvas id="evolutionChart"></canvas>
+          </div>
         </div>
       </div>
 
       <section class="settings-panel card">
         <div class="settings-motivating-message">
-          <p>Choisis tes réglages puis lance le test — gagne la coupe ! 🏆</p>
+          <p>Choisis tes réglages et commences ton entraînement ou mieux!!! Le test et gagnes la coupe. 🏆</p>
         </div>
-        
+
         <h2>Réglages de ton Test</h2>
         
         <div class="form-group">
@@ -158,33 +176,72 @@
             <label><input type="checkbox" value="12"><span>12</span></label>
           </div>
         </div>
-        
+
         <div class="form-group">
-          <label class="form-label">Temps pour la série (minutes) :</label>
+          <label class="form-label">Temps pour ta série de 10 questions :</label>
           <select id="timeLimit">
+            <option value="0.5">30 secondes</option>
             <option value="1" selected>1 minute</option>
             <option value="2">2 minutes</option>
             <option value="3">3 minutes</option>
+            <option value="4">4 minutes</option>
             <option value="5">5 minutes</option>
+            <option value="6">6 minutes</option>
+            <option value="7">7 minutes</option>
+            <option value="8">8 minutes</option>
+            <option value="9">9 minutes</option>
             <option value="10">10 minutes</option>
+            <option value="15">15 minutes</option>
+            <option value="20">20 minutes</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Nombre de questions :</label>
           <select id="questionCount">
             <option value="10" selected>10 questions</option>
             <option value="20">20 questions</option>
             <option value="30">30 questions</option>
+            <option value="40">40 questions</option>
+            <option value="50">50 questions</option>
+            <option value="60">60 questions</option>
+            <option value="70">70 questions</option>
+            <option value="80">80 questions</option>
+            <option value="90">90 questions</option>
+            <option value="100">100 questions</option>
+            <option value="110">110 questions</option>
+            <option value="120">120 questions</option>
+            <option value="130">130 questions</option>
+            <option value="140">140 questions</option>
+            <option value="150">150 questions</option>
+            <option value="160">160 questions</option>
+            <option value="170">170 questions</option>
+            <option value="180">180 questions</option>
+            <option value="190">190 questions</option>
+            <option value="200">200 questions</option>
+            <option value="250">250 questions</option>
+            <option value="300">300 questions</option>
+            <option value="350">350 questions</option>
+            <option value="400">400 questions</option>
+            <option value="450">450 questions</option>
+            <option value="500">500 questions</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label>
             <input type="checkbox" id="noTimerMode"> Mode entraînement (sans chrono)
           </label>
         </div>
-        
+
+        <button id="startGame" class="btn-primary">Commencer le Test</button>
+
+        <!-- Boutons export (affichés seulement si profil ADULTE via CSS) -->
+        <div class="export-buttons">
+          <button class="btn-export" id="exportCSV">📝 Export CSV</button>
+          <button class="btn-export" id="exportPDF">📄 Export PDF</button>
+          <button class="btn-export" id="modeClasse">👥 Mode Classe</button>
+        </div>
       </section>
     </div>
 
@@ -192,59 +249,27 @@
     <div id="learnPage" class="card hidden">
       <h2 class="learn-title">Apprentissage des Tables de 1 à 12</h2>
       <p class="learn-sub">Clique sur une table pour apprendre ses secrets !</p>
-
       <div class="legend">
         <span><i style="background: #4caf50;"></i>Facile</span>
         <span><i style="background: #ff9800;"></i>Moyen</span>
         <span><i style="background: #f44336;"></i>Difficile</span>
       </div>
-
       <div class="grid-tables">
-        <div class="table-card easy" data-num="1">
-          <div class="table-num">1</div>
-          Table de 1<br><span class="diff-label">FACILE</span>
-        </div>
-        <div class="table-card easy" data-num="2">
-          <div class="table-num">2</div>
-          Table de 2<br><span class="diff-label">FACILE</span>
-        </div>
-        <div class="table-card easy" data-num="5">
-          <div class="table-num">5</div>
-          Table de 5<br><span class="diff-label">FACILE</span>
-        </div>
-        <div class="table-card medium" data-num="3">
-          <div class="table-num">3</div>
-          Table de 3<br><span class="diff-label">MOYEN</span>
-        </div>
-        <div class="table-card medium" data-num="4">
-          <div class="table-num">4</div>
-          Table de 4<br><span class="diff-label">MOYEN</span>
-        </div>
-        <div class="table-card medium" data-num="6">
-          <div class="table-num">6</div>
-          Table de 6<br><span class="diff-label">MOYEN</span>
-        </div>
-        <div class="table-card medium" data-num="9">
-          <div class="table-num">9</div>
-          Table de 9<br><span class="diff-label">MOYEN</span>
-        </div>
-        <div class="table-card hard" data-num="7">
-          <div class="table-num">7</div>
-          Table de 7<br><span class="diff-label">DIFFICILE</span>
-        </div>
-        <div class="table-card hard" data-num="8">
-          <div class="table-num">8</div>
-          Table de 8<br><span class="diff-label">DIFFICILE</span>
-        </div>
-        <div class="table-card hard" data-num="12">
-          <div class="table-num">12</div>
-          Table de 12<br><span class="diff-label">DIFFICILE</span>
-        </div>
+        <!-- 12 cartes (1..12) -->
+        <div class="table-card easy" data-num="1"><div class="table-num">1</div>Table de 1<br><span class="diff-label">FACILE</span></div>
+        <div class="table-card easy" data-num="2"><div class="table-num">2</div>Table de 2<br><span class="diff-label">FACILE</span></div>
+        <div class="table-card medium" data-num="3"><div class="table-num">3</div>Table de 3<br><span class="diff-label">MOYEN</span></div>
+        <div class="table-card medium" data-num="4"><div class="table-num">4</div>Table de 4<br><span class="diff-label">MOYEN</span></div>
+        <div class="table-card easy" data-num="5"><div class="table-num">5</div>Table de 5<br><span class="diff-label">FACILE</span></div>
+        <div class="table-card medium" data-num="6"><div class="table-num">6</div>Table de 6<br><span class="diff-label">MOYEN</span></div>
+        <div class="table-card hard" data-num="7"><div class="table-num">7</div>Table de 7<br><span class="diff-label">DIFFICILE</span></div>
+        <div class="table-card hard" data-num="8"><div class="table-num">8</div>Table de 8<br><span class="diff-label">DIFFICILE</span></div>
+        <div class="table-card medium" data-num="9"><div class="table-num">9</div>Table de 9<br><span class="diff-label">MOYEN</span></div>
+        <div class="table-card easy" data-num="10"><div class="table-num">10</div>Table de 10<br><span class="diff-label">FACILE</span></div>
+        <div class="table-card medium" data-num="11"><div class="table-num">11</div>Table de 11<br><span class="diff-label">MOYEN</span></div>
+        <div class="table-card hard" data-num="12"><div class="table-num">12</div>Table de 12<br><span class="diff-label">DIFFICILE</span></div>
       </div>
-
-      <div style="text-align: center; margin-top: 35px;">
-        <button id="backHome" class="btn-primary">⟲ Retour</button>
-      </div>
+      <div style="text-align:center;margin-top:35px;"><button id="backHome" class="btn-primary">⟲ Retour</button></div>
     </div>
 
     <!-- ========== PAGE DÉTAIL TABLE ========== -->
@@ -263,7 +288,7 @@
     <div id="astuceModal" class="modal-overlay">
       <div class="modal-content">
         <button id="closeAstuceModal" class="modal-close">×</button>
-        <h3 id="astuceModalTitle" class="modal-title">Astuces Table de 2</h3>
+        <h3 id="astuceModalTitle" class="modal-title">Astuces Table</h3>
         <ul id="astuceModalContent" class="astuce-list"></ul>
       </div>
     </div>
@@ -273,24 +298,15 @@
       <div class="race-track" id="raceTrack">
         <div class="race-track-title">Course contre la montre !</div>
         <div class="track-container">
-          <div class="track-markers">
-            <div class="track-start">🏁</div>
-            <div class="track-end">🥇</div>
-          </div>
+          <div class="track-markers"><div class="track-start">🏁</div><div class="track-end">🥇</div></div>
           <div class="rabbit" id="rabbit">🐰</div>
         </div>
         <div class="time-remaining" id="timeRemaining">Temps restant: 5:00</div>
       </div>
-      
-      <div class="progress-info">
-        <span id="progressText">Question 1 / 30</span>
-      </div>
-      <div class="progress-bar">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
+      <div class="progress-info"><span id="progressText">Question 1 / 30</span></div>
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
       <div id="question" class="question">7 × 8 = ?</div>
-      <input type="number" id="answerInput" class="answer-input" placeholder="?">
-      <br><br>
+      <input type="number" id="answerInput" class="answer-input" placeholder="?"><br><br>
       <button id="validateBtn" class="btn-primary">Valider</button>
     </section>
 
@@ -299,58 +315,32 @@
       <h2>Résultats de ton test</h2>
       <div id="medal" class="medal">🏆</div>
       <div id="medalText">OR</div>
-      
       <div id="medalMessage" class="medal-message"></div>
-      
       <div class="score-blocks">
-        <div class="score-block">
-          <div class="score-label">Score global</div>
-          <div id="finalScore" class="score-value">0/30</div>
-        </div>
-        <div class="score-block">
-          <div class="score-label">Bonnes réponses</div>
-          <div id="correctCount" class="score-value">0</div>
-        </div>
-        <div class="score-block">
-          <div class="score-label">Mauvaises réponses</div>
-          <div id="incorrectCount" class="score-value">0</div>
-        </div>
-        <div class="score-block">
-          <div class="score-label">Non répondues</div>
-          <div id="missedCount" class="score-value">0</div>
-        </div>
-        <div class="score-block">
-          <div class="score-label">Pourcentage de réussite</div>
-          <div id="successPercentage" class="score-value">0%</div>
-        </div>
+        <div class="score-block"><div class="score-label">Score global</div><div id="finalScore" class="score-value">0/30</div></div>
+        <div class="score-block"><div class="score-label">Bonnes réponses</div><div id="correctCount" class="score-value">0</div></div>
+        <div class="score-block"><div class="score-label">Mauvaises réponses</div><div id="incorrectCount" class="score-value">0</div></div>
+        <div class="score-block"><div class="score-label">Non répondues</div><div id="missedCount" class="score-value">0</div></div>
+        <div class="score-block"><div class="score-label">Pourcentage de réussite</div><div id="successPercentage" class="score-value">0%</div></div>
       </div>
-      
       <h3>Grille des résultats 12×12 :</h3>
-      <div class="results-grid">
-        <table id="resultsGrid"></table>
-      </div>
-      
+      <div class="results-grid"><table id="resultsGrid"></table></div>
       <h3>Liste détaillée des erreurs :</h3>
       <div id="errorsList"></div>
-      
       <div style="margin-top:20px;">
         <button id="newGameBtn" class="btn-primary">Nouvelle série</button>
         <button id="backToSettingsBtn" class="btn-primary">Modifier les paramètres</button>
       </div>
     </section>
 
-    <!-- ========== FOOTER ========== -->
+    <!-- FOOTER -->
     <footer class="footer">
-      <div class="footer-logo">
-        <img src="assets/images/logofTDSR.png" alt="Logo DSR">
-      </div>
-      <div class="footer-text">
-        Conçu et développé par DSR / edlam.dsr@gmail.com
-      </div>
+      <div class="footer-logo"><img src="assets/images/logofTDSR.png" alt="Logo DSR"></div>
+      <div class="footer-text">Conçu et développé par DSR / edlam.dsr@gmail.com</div>
     </footer>
   </div>
 
-  <!-- Chargement du script principal en module (permet import de js/config.js) -->
+  <!-- Script principal (module pour permettre import ./config.js depuis app.js) -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
