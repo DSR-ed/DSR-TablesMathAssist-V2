@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TablesMathAssist - DSR</title>
-  <!-- Chart.js pour statistiques avancées -->
+
+  <!-- Chart.js (global) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- Feuille de style -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Script principal (module) -->
+  <script type="module" src="js/app.js" defer></script>
 </head>
 <body>
   <div class="app-container">
@@ -14,7 +20,7 @@
     <header class="header">
       <div class="header-top">
         <div class="header-logo">
-          <img src="logofTDSR.png" alt="Logo DSR" />
+          <img src="assets/images/logofTDSR.png" alt="Logo DSR" />
         </div>
         <div style="display: flex; gap: 8px;">
           <button id="settingsButtonMobile" class="btn-settings">
@@ -27,7 +33,7 @@
       </div>
 
       <div class="header-logo" style="display: none;">
-        <img src="logofTDSR.png" alt="Logo DSR" />
+        <img src="assets/images/logofTDSR.png" alt="Logo DSR" />
       </div>
       
       <h1 class="app-title">TablesMathAssist</h1>
@@ -57,7 +63,7 @@
               <input type="radio" name="userProfile" value="CM1">
               <div class="profile-info">
                 <div class="profile-label cm1-color">CM1 (9-10 ans)</div>
-                <div class="profile-description">Tables 2, 3, 4, 5 prioritaires • Autres jusqu'à 10 • Interface colorée et ludique • Animations bouncy</div>
+                <div class="profile-description">Tables 2, 3, 4, 5 prioritaires + autres jusqu'à 10 • Interface colorée et ludique • Animations bouncy</div>
               </div>
             </label>
             
@@ -96,7 +102,7 @@
         </div>
 
         <div class="settings-section">
-          <h3>🎵 Préférences audio</h3>
+          <h3>🔊 Préférences audio</h3>
           <label class="toggle-option">
             <input type="checkbox" id="soundsEnabled" checked>
             <span class="toggle-slider"></span>
@@ -105,7 +111,7 @@
         </div>
 
         <div class="settings-section">
-          <h3>🎨 Effets visuels</h3>
+          <h3>✨ Effets visuels</h3>
           <label class="toggle-option">
             <input type="checkbox" id="animationsEnabled" checked>
             <span class="toggle-slider"></span>
@@ -115,7 +121,7 @@
 
         <div class="settings-modal-footer">
           <button class="btn-save" id="saveSettingsBtn">💾 Sauvegarder</button>
-          <button class="btn-cancel" id="cancelSettingsBtn">✖ Annuler</button>
+          <button class="btn-cancel" id="cancelSettingsBtn">❌ Annuler</button>
         </div>
       </div>
     </div>
@@ -123,17 +129,117 @@
     <!-- ========== PAGE ACCUEIL ========== -->
     <div id="homePage">
       <div class="welcome-message card">
-        <p>L'application dédiée aux élèves de CM1 à la 5ème pour un entraînement aux tables de multiplication.</p>
-        <button id="learnBtn" class="btn-primary">Commencer à apprendre</button>
-        <button id="trainBtn" class="btn-primary">Commencer l'entraînement</button>
+        <p>L'application dédiée aux élèves de CM1 à la 5ème pour un apprentissage parfait des tables de multiplications de 1 à 12</p>
       </div>
+
+      <section class="learn-panel card">
+        <h2>Apprends tes tables ici</h2>
+        <div class="welcome-section">
+          <p style="font-size: 1.1rem; margin-bottom: 20px;">
+            📚 Découvre les astuces et secrets de chaque table de multiplication !
+          </p>
+          <button id="learnBtn" class="btn-primary" style="background: #8e24aa;">Commencer à apprendre</button>
+        </div>
+      </section>
+
+      <!-- ========== STATISTIQUES AVANCÉES MODE ADULTE ========== -->
+      <div class="stats-dashboard">
+        <div class="stats-card">
+          <h3>📊 Performances générales</h3>
+          <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="stats-card">
+          <h3>📈 Évolution temporelle</h3>
+          <div class="chart-container">
+            <canvas id="evolutionChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <section class="settings-panel card">
+        <div class="settings-motivating-message">
+          <p>Choisis tes réglages et commences ton entraînement ou mieux!!! Le test et gagnes la coupe. 🏆</p>
+        </div>
+        
+        <h2>Réglages de ton Test</h2>
+        
+        <div class="form-group">
+          <label class="form-label">Tables à réviser :</label>
+          <div class="tables-selector">
+            <label><input type="checkbox" value="1" checked><span>1</span></label>
+            <label><input type="checkbox" value="2" checked><span>2</span></label>
+            <label><input type="checkbox" value="3" checked><span>3</span></label>
+            <label><input type="checkbox" value="4" checked><span>4</span></label>
+            <label><input type="checkbox" value="5" checked><span>5</span></label>
+            <label><input type="checkbox" value="6" checked><span>6</span></label>
+            <label><input type="checkbox" value="7" checked><span>7</span></label>
+            <label><input type="checkbox" value="8" checked><span>8</span></label>
+            <label><input type="checkbox" value="9" checked><span>9</span></label>
+            <label><input type="checkbox" value="10" checked><span>10</span></label>
+            <label><input type="checkbox" value="11"><span>11</span></label>
+            <label><input type="checkbox" value="12"><span>12</span></label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" id="timeLimitLabel">Temps pour ta série de questions :</label>
+          <select id="timeLimit">
+            <option value="0.5">30 secondes</option>
+            <option value="1" selected>1 minute</option>
+            <option value="2">2 minutes</option>
+            <option value="3">3 minutes</option>
+            <option value="4">4 minutes</option>
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15">15 minutes</option>
+            <option value="20">20 minutes</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Nombre de questions :</label>
+          <select id="questionCount">
+            <option value="10" selected>10 questions</option>
+            <option value="20">20 questions</option>
+            <option value="30">30 questions</option>
+            <option value="40">40 questions</option>
+            <option value="50">50 questions</option>
+            <option value="100">100 questions</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="noTimerMode"> Mode entraînement (sans chrono)
+          </label>
+        </div>
+        
+        <button id="startGame" class="btn-primary">Commencer le Test</button>
+        
+        <!-- BOUTONS EXPORT MODE ADULTE -->
+        <div class="export-buttons">
+          <button class="btn-export" id="exportCSV">📥 Export CSV</button>
+          <button class="btn-export" id="exportPDF">📄 Export PDF</button>
+          <button class="btn-export" id="modeClasse">👥 Mode Classe</button>
+        </div>
+      </section>
     </div>
 
     <!-- ========== PAGE APPRENTISSAGE ========== -->
-    <div id="learnPage" class="card">
-      <h2>Mode Apprentissage</h2>
-      <p>Sélectionnez une table pour consulter les astuces associées :</p>
-      <div class="table-selector">
+    <div id="learnPage" class="card" style="display:none;">
+      <h2 class="learn-title">Apprentissage des Tables de 1 à 12</h2>
+      <p class="learn-sub">Clique sur une table pour apprendre ses secrets !</p>
+
+      <div class="legend">
+        <span><i style="background: #4caf50;"></i>Facile</span>
+        <span><i style="background: #ff9800;"></i>Moyen</span>
+        <span><i style="background: #f44336;"></i>Difficile</span>
+      </div>
+
+      <div class="grid-tables">
         <div class="table-card easy" data-num="1">
           <div class="table-num">1</div>
           Table de 1<br><span class="diff-label">FACILE</span>
@@ -145,6 +251,10 @@
         <div class="table-card easy" data-num="5">
           <div class="table-num">5</div>
           Table de 5<br><span class="diff-label">FACILE</span>
+        </div>
+        <div class="table-card easy" data-num="10">
+          <div class="table-num">10</div>
+          Table de 10<br><span class="diff-label">FACILE</span>
         </div>
         <div class="table-card medium" data-num="3">
           <div class="table-num">3</div>
@@ -162,6 +272,10 @@
           <div class="table-num">9</div>
           Table de 9<br><span class="diff-label">MOYEN</span>
         </div>
+        <div class="table-card medium" data-num="11">
+          <div class="table-num">11</div>
+          Table de 11<br><span class="diff-label">MOYEN</span>
+        </div>
         <div class="table-card hard" data-num="7">
           <div class="table-num">7</div>
           Table de 7<br><span class="diff-label">DIFFICILE</span>
@@ -177,12 +291,12 @@
       </div>
 
       <div style="text-align: center; margin-top: 35px;">
-        <button id="backHome" class="btn-primary">⟲ Retour</button>
+        <button id="backHome" class="btn-primary">⬅ Retour</button>
       </div>
     </div>
 
     <!-- ========== PAGE DÉTAIL TABLE ========== -->
-    <div id="tableDetailPage" class="card">
+    <div id="tableDetailPage" class="card" style="display:none;">
       <div class="table-detail-header">
         <h2 id="tableDetailTitle" class="table-detail-title">Table de 2</h2>
         <div>
@@ -197,19 +311,19 @@
     <div id="astuceModal" class="modal-overlay">
       <div class="modal-content">
         <button id="closeAstuceModal" class="modal-close">×</button>
-        <h3 id="astuceModalTitle" class="modal-title">Astuces Table de 2</h3>
+        <h3 id="astuceModalTitle" class="modal-title">Astuces Table</h3>
         <ul id="astuceModalContent" class="astuce-list"></ul>
       </div>
     </div>
 
     <!-- ========== PAGE DE JEU ========== -->
-    <section id="gameArea" class="game-area card">
+    <section id="gameArea" class="game-area card" style="display:none;">
       <div class="race-track" id="raceTrack">
         <div class="race-track-title">Course contre la montre !</div>
         <div class="track-container">
           <div class="track-markers">
-            <div class="track-start">🏁</div>
-            <div class="track-end">🥇</div>
+            <div class="track-start">🚀</div>
+            <div class="track-end">🏁</div>
           </div>
           <div class="rabbit" id="rabbit">🐰</div>
         </div>
@@ -223,23 +337,23 @@
         <div id="progressFill" class="progress-fill"></div>
       </div>
       <div id="question" class="question">7 × 8 = ?</div>
-      <input type="number" id="answerInput" class="answer-input" placeholder="?">
-      <br><br>
-      <button id="validateBtn" class="btn-primary">Valider</button>
+      <input id="answerInput" class="answer-input" type="number" inputmode="numeric" autocomplete="off" />
+      <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+        <button id="validateBtn" class="btn-primary">Valider</button>
+        <button id="skipBtn" class="btn-return">Passer</button>
+      </div>
     </section>
 
     <!-- ========== PAGE RÉSULTATS ========== -->
-    <section id="resultsArea" class="results-area card">
-      <h2>Résultats de ton test</h2>
-      <div id="medal" class="medal">🏆</div>
-      <div id="medalText">OR</div>
-      
-      <div id="medalMessage" class="medal-message"></div>
-      
+    <section id="resultsArea" class="results-area card" style="display:none;">
+      <h2 id="medalText">--</h2>
+      <div id="medal" class="medal">🏅</div>
+      <div class="medal-message" id="medalMessage">Message</div>
+
       <div class="score-blocks">
         <div class="score-block">
           <div class="score-label">Score global</div>
-          <div id="finalScore" class="score-value">0/30</div>
+          <div id="finalScore" class="score-value">0/0</div>
         </div>
         <div class="score-block">
           <div class="score-label">Bonnes réponses</div>
@@ -258,43 +372,25 @@
           <div id="successPercentage" class="score-value">0%</div>
         </div>
       </div>
-      
-      <h3>Grille des résultats 12×12 :</h3>
+
       <div class="results-grid">
-        <table id="resultsGrid"></table>
+        <table id="resultsGrid" aria-label="Grille des résultats"></table>
       </div>
-      
-      <div style="margin:20px 0;">
-        <div style="display:inline-block;margin:0 10px;">
-          <span style="display:inline-block;width:20px;height:20px;background:transparent;border:1px solid #666;margin-right:5px;"></span>Réponse correcte
-        </div>
-        <div style="display:inline-block;margin:0 10px;">
-          <span style="display:inline-block;width:20px;height:20px;background:#f44;margin-right:5px;"></span>Réponse incorrecte
-        </div>
-        <div style="display:inline-block;margin:0 10px;">
-          <span style="display:inline-block;width:20px;height:20px;background:#ff0;margin-right:5px;"></span>Non répondu
-        </div>
-      </div>
-      
-      <h3>Liste détaillée des erreurs :</h3>
+
       <div id="errorsList"></div>
-      
-      <button id="newGameBtn" class="btn-primary">Nouvelle série</button>
-      <button id="backToSettingsBtn" class="btn-primary">Modifier les paramètres</button>
+
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+        <button id="newGameBtn" class="btn-primary">Nouvelle série</button>
+        <button id="backToSettingsBtn" class="btn-return">Modifier les paramètres</button>
+      </div>
     </section>
 
-    <!-- ========== FOOTER ========== -->
     <footer class="footer">
       <div class="footer-logo">
-        <img src="logofTDSR.png" alt="Logo DSR">
+        <img src="assets/images/logofTDSR.png" alt="Logo DSR"/>
       </div>
-      <div class="footer-text">
-        Conçu et développé par DSR / edlam.dsr@gmail.com
-      </div>
+      <div class="footer-text">Conçu et développé par DSR / edlam.dsr@gmail.com</div>
     </footer>
   </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
-
